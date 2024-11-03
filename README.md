@@ -1,6 +1,6 @@
 # dsa_project
 
-Theprogrampresents a sophisticated implementation of segment trees
+The program presents a sophisticated implementation of segment trees
  to manage a vector of pairs containing attack and health values, facilitating
  efficient range queries and data manipulation. Notably, it incorporates multiple
  segment trees, each optimized for specific functionalities, such as summing values
