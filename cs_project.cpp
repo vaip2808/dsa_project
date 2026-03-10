@@ -11,42 +11,42 @@ using namespace std;
 class SegmentTree
 {
 private:
-    vector<pair<int, int>> a;                           // Vector of pairs (attack, health)
-    vector<long long> sumAttackTree, sumHealthTree;     // Segment trees for sum of attacks and healths
+    vector<pair<int, int>> a; // Vector of pairs (attack, health)
+    vector<long long> sumAttackTree, sumHealthTree; // Segment trees for sum of attacks and healths
     vector<int> maxAttackTreeIndex, maxHealthTreeIndex; // Segment trees for max attack and health indices
     vector<int> minAttackTreeIndex, minHealthTreeIndex; // Segment trees for min attack and health indices
-    vector<int> gcdAttackTree, gcdHealthTree;           // Segment trees for GCD of attacks and healths
-    vector<long long> lcmAttackTree, lcmHealthTree;     // Segment trees for LCM of attacks and healths
+    vector<int> gcdAttackTree, gcdHealthTree; // Segment trees for GCD of attacks and healths
+    vector<long long> lcmAttackTree, lcmHealthTree; // Segment trees for LCM of attacks and healths
 
     void buildSumAttack(int node, int start, int end) // Function to build the sum attack segment tree
     {
-        if (start == end)
+        if (start == end) 
         {
             sumAttackTree[node] = a[start].first; // Leaf node
             return;
         }
         int mid = (start + end) / 2;
-        buildSumAttack(2 * node + 1, start, mid);                                        // Build left child
-        buildSumAttack(2 * node + 2, mid + 1, end);                                      // Build right child
+        buildSumAttack(2 * node + 1, start, mid); // Build left child
+        buildSumAttack(2 * node + 2, mid + 1, end); // Build right child
         sumAttackTree[node] = sumAttackTree[2 * node + 1] + sumAttackTree[2 * node + 2]; // Combine results
     }
 
     void buildSumHealth(int node, int start, int end) // Function to build the sum health segment tree
     {
-        if (start == end)
+        if (start == end) 
         {
             sumHealthTree[node] = a[start].second; // Leaf node
             return;
         }
         int mid = (start + end) / 2;
-        buildSumHealth(2 * node + 1, start, mid);                                        // Build left child
-        buildSumHealth(2 * node + 2, mid + 1, end);                                      // Build right child
+        buildSumHealth(2 * node + 1, start, mid); // Build left child
+        buildSumHealth(2 * node + 2, mid + 1, end); // Build right child
         sumHealthTree[node] = sumHealthTree[2 * node + 1] + sumHealthTree[2 * node + 2]; // Combine results
     }
 
     int querySumAttack(int node, int start, int end, int l, int r) // Function to query the sum of attacks in a given range
     {
-        if (start > r || end < l)
+        if (start > r || end < l) 
         {
             return 0; // Out of range
         }
@@ -55,21 +55,21 @@ private:
             return sumAttackTree[node]; // Fully in range
         }
         int mid = (start + end) / 2;
-        int leftSum = querySumAttack(2 * node + 1, start, mid, l, r);    // Query left child
+        int leftSum = querySumAttack(2 * node + 1, start, mid, l, r); // Query left child
         int rightSum = querySumAttack(2 * node + 2, mid + 1, end, l, r); // Query right child
-        return leftSum + rightSum;                                       // Combine results
+        return leftSum + rightSum; // Combine results
     }
 
     long long lcm(int a, int b) // Function to calculate the LCM of two numbers
     {
-        if (a == 0 || b == 0)
+        if (a == 0 || b == 0) 
             return 0;                            // LCM of 0 with any number is 0
         return (long long)a * (b / __gcd(a, b)); // Calculate LCM
     }
 
-    int querySumHealth(int node, int start, int end, int l, int r)
-    // Function to query the sum of healths in a given range
-    {
+    int querySumHealth(int node, int start, int end, int l, int r) 
+        // Function to query the sum of healths in a given range
+       {
         if (start > r || end < l)
         {
             return 0; // Out of range
@@ -79,9 +79,9 @@ private:
             return sumHealthTree[node]; // Fully in range
         }
         int mid = (start + end) / 2;
-        int leftSum = querySumHealth(2 * node + 1, start, mid, l, r);    // Query left child
+        int leftSum = querySumHealth(2 * node + 1, start, mid, l, r); // Query left child
         int rightSum = querySumHealth(2 * node + 2, mid + 1, end, l, r); // Query right child
-        return leftSum + rightSum;                                       // Combine results
+        return leftSum + rightSum; // Combine results
     }
     void buildMaxAttack(int node, int start, int end) // Function to build the max attack segment tree
     {
@@ -91,38 +91,38 @@ private:
             return;
         }
         int mid = (start + end) / 2;
-        buildMaxAttack(2 * node + 1, start, mid);   // Build left child
+        buildMaxAttack(2 * node + 1, start, mid); // Build left child
         buildMaxAttack(2 * node + 2, mid + 1, end); // Build right child
         maxAttackTreeIndex[node] = (a[maxAttackTreeIndex[2 * node + 1]].first > a[maxAttackTreeIndex[2 * node + 2]].first)
                                        ? maxAttackTreeIndex[2 * node + 1]
                                        : maxAttackTreeIndex[2 * node + 2]; // Combine results
     }
-
+    
     void buildMaxHealth(int node, int start, int end) // Function to build the max health segment tree
     {
-        if (start == end)
+        if (start == end) 
         {
             maxHealthTreeIndex[node] = start; // Leaf node
             return;
         }
-        int mid = (start + end) / 2;                                                                                         // Calculate the mid point
-        buildMaxHealth(2 * node + 1, start, mid);                                                                            // Build left child
-        buildMaxHealth(2 * node + 2, mid + 1, end);                                                                          // Build right child
+        int mid = (start + end) / 2; // Calculate the mid point
+        buildMaxHealth(2 * node + 1, start, mid); // Build left child
+        buildMaxHealth(2 * node + 2, mid + 1, end); // Build right child
         maxHealthTreeIndex[node] = (a[maxHealthTreeIndex[2 * node + 1]].second > a[maxHealthTreeIndex[2 * node + 2]].second) // Combine results
-                                       ? maxHealthTreeIndex[2 * node + 1]
+                                       ? maxHealthTreeIndex[2 * node + 1] 
                                        : maxHealthTreeIndex[2 * node + 2];
     }
 
-    void buildMinAttack(int node, int start, int end) // Function to build the min attack segment tree
+    void buildMinAttack(int node, int start, int end)  // Function to build the min attack segment tree
     {
-        if (start == end)
+        if (start == end) 
         {
             minAttackTreeIndex[node] = start; // Leaf node
             return;
         }
-        int mid = (start + end) / 2;                                                                                       // Calculate the mid point
-        buildMinAttack(2 * node + 1, start, mid);                                                                          // Build left child
-        buildMinAttack(2 * node + 2, mid + 1, end);                                                                        // Build right child
+        int mid = (start + end) / 2; // Calculate the mid point
+        buildMinAttack(2 * node + 1, start, mid); // Build left child
+        buildMinAttack(2 * node + 2, mid + 1, end); // Build right child
         minAttackTreeIndex[node] = (a[minAttackTreeIndex[2 * node + 1]].first < a[minAttackTreeIndex[2 * node + 2]].first) // Combine results
                                        ? minAttackTreeIndex[2 * node + 1]
                                        : minAttackTreeIndex[2 * node + 2];
@@ -130,14 +130,14 @@ private:
 
     void buildMinHealth(int node, int start, int end) // Function to build the min health segment tree
     {
-        if (start == end)
+        if (start == end) 
         {
             minHealthTreeIndex[node] = start; // Leaf node
             return;
         }
-        int mid = (start + end) / 2;                                                                                         // Calculate the mid point
-        buildMinHealth(2 * node + 1, start, mid);                                                                            // Build left child
-        buildMinHealth(2 * node + 2, mid + 1, end);                                                                          // Build right child
+        int mid = (start + end) / 2; // Calculate the mid point
+        buildMinHealth(2 * node + 1, start, mid); // Build left child
+        buildMinHealth(2 * node + 2, mid + 1, end); // Build right child
         minHealthTreeIndex[node] = (a[minHealthTreeIndex[2 * node + 1]].second < a[minHealthTreeIndex[2 * node + 2]].second) // Combine results
                                        ? minHealthTreeIndex[2 * node + 1]
                                        : minHealthTreeIndex[2 * node + 2];
@@ -145,22 +145,22 @@ private:
 
     int queryMaxAttackIndex(int node, int start, int end, int l, int r) // Function to query the index of max attack in a given range
     {
-        if (start > r || end < l)
+        if (start > r || end < l) 
         {
             return -1; // Out of range
         }
-        if (l <= start && r >= end)
+        if (l <= start && r >= end) 
         {
             return maxAttackTreeIndex[node]; // Fully in range
         }
         int mid = (start + end) / 2;
-        int leftIndex = queryMaxAttackIndex(2 * node + 1, start, mid, l, r);    // Query left child
+        int leftIndex = queryMaxAttackIndex(2 * node + 1, start, mid, l, r); // Query left child
         int rightIndex = queryMaxAttackIndex(2 * node + 2, mid + 1, end, l, r); // Query right child
-        if (leftIndex == -1)
+        if (leftIndex == -1) 
         {
             return rightIndex;
         }
-        if (rightIndex == -1)
+        if (rightIndex == -1) 
         {
             return leftIndex;
         }
@@ -169,22 +169,22 @@ private:
 
     int queryMaxHealthIndex(int node, int start, int end, int l, int r) // Function to query the index of max health in a given range
     {
-        if (start > r || end < l)
+        if (start > r || end < l) 
         {
             return -1; // Out of range
         }
-        if (l <= start && r >= end)
+        if (l <= start && r >= end) 
         {
             return maxHealthTreeIndex[node]; // Fully in range
         }
-        int mid = (start + end) / 2;                                            // Calculate the mid point
-        int leftIndex = queryMaxHealthIndex(2 * node + 1, start, mid, l, r);    // Query left child
+        int mid = (start + end) / 2; // Calculate the mid point
+        int leftIndex = queryMaxHealthIndex(2 * node + 1, start, mid, l, r); // Query left child
         int rightIndex = queryMaxHealthIndex(2 * node + 2, mid + 1, end, l, r); // Query right child
-        if (leftIndex == -1)
+        if (leftIndex == -1) 
         {
             return rightIndex;
         }
-        if (rightIndex == -1)
+        if (rightIndex == -1) 
         {
             return leftIndex;
         }
@@ -196,13 +196,13 @@ private:
         if (start > r || end < l)
             return -1; // Out of range
         if (l <= start && r >= end)
-            return minAttackTreeIndex[node];                                    // Fully in range
-        int mid = (start + end) / 2;                                            // Calculate the mid point
-        int leftIndex = queryMinAttackIndex(2 * node + 1, start, mid, l, r);    // Query left child
+            return minAttackTreeIndex[node]; // Fully in range
+        int mid = (start + end) / 2; // Calculate the mid point
+        int leftIndex = queryMinAttackIndex(2 * node + 1, start, mid, l, r); // Query left child
         int rightIndex = queryMinAttackIndex(2 * node + 2, mid + 1, end, l, r); // Query right child
-        if (leftIndex == -1)                                                    // Combine results
+        if (leftIndex == -1)  // Combine results
             return rightIndex;
-        if (rightIndex == -1) // Combine results
+        if (rightIndex == -1)  // Combine results
             return leftIndex;
         return (a[leftIndex].first < a[rightIndex].first) ? leftIndex : rightIndex; // Combine results
     }
@@ -214,7 +214,7 @@ private:
         if (l <= start && r >= end)
             return minHealthTreeIndex[node]; // Fully in range
         int mid = (start + end) / 2;
-        int leftIndex = queryMinHealthIndex(2 * node + 1, start, mid, l, r);    // Query left child
+        int leftIndex = queryMinHealthIndex(2 * node + 1, start, mid, l, r); // Query left child
         int rightIndex = queryMinHealthIndex(2 * node + 2, mid + 1, end, l, r); // Query right child
         if (leftIndex == -1)
             return rightIndex;
@@ -230,9 +230,9 @@ private:
             gcdAttackTree[node] = a[start].first; // Leaf node
             return;
         }
-        int mid = (start + end) / 2;                                                           // Calculate the mid point
-        buildGcdAttack(2 * node + 1, start, mid);                                              // Build left child
-        buildGcdAttack(2 * node + 2, mid + 1, end);                                            // Build right child
+        int mid = (start + end) / 2; // Calculate the mid point
+        buildGcdAttack(2 * node + 1, start, mid); // Build left child
+        buildGcdAttack(2 * node + 2, mid + 1, end);     // Build right child
         gcdAttackTree[node] = __gcd(gcdAttackTree[2 * node + 1], gcdAttackTree[2 * node + 2]); // Combine results
     }
 
@@ -243,9 +243,9 @@ private:
             gcdHealthTree[node] = a[start].second; // Leaf node
             return;
         }
-        int mid = (start + end) / 2;                                                           // Calculate the mid point
-        buildGcdHealth(2 * node + 1, start, mid);                                              // Build left child
-        buildGcdHealth(2 * node + 2, mid + 1, end);                                            // Build right child
+        int mid = (start + end) / 2; // Calculate the mid point
+        buildGcdHealth(2 * node + 1, start, mid); // Build left child
+        buildGcdHealth(2 * node + 2, mid + 1, end); // Build right child
         gcdHealthTree[node] = __gcd(gcdHealthTree[2 * node + 1], gcdHealthTree[2 * node + 2]); // Combine results
     }
 
@@ -256,26 +256,26 @@ private:
             lcmAttackTree[node] = a[start].first; // Leaf node
             return;
         }
-        int mid = (start + end) / 2;                                                         // Calculate the mid point
-        buildLcmAttack(2 * node + 1, start, mid);                                            // Build left child
-        buildLcmAttack(2 * node + 2, mid + 1, end);                                          // Build right child
+        int mid = (start + end) / 2; // Calculate the mid point
+        buildLcmAttack(2 * node + 1, start, mid); // Build left child
+        buildLcmAttack(2 * node + 2, mid + 1, end);     // Build right child
         lcmAttackTree[node] = lcm(lcmAttackTree[2 * node + 1], lcmAttackTree[2 * node + 2]); // Combine results
     }
 
-    void buildLcmHealth(int node, int start, int end) // Function to build the LCM health segment tree
+    void buildLcmHealth(int node, int start, int end)  // Function to build the LCM health segment tree
     {
         if (start == end)
         {
             lcmHealthTree[node] = a[start].second; // Leaf node
             return;
         }
-        int mid = (start + end) / 2;                                                         // Calculate the mid point
-        buildLcmHealth(2 * node + 1, start, mid);                                            // Build left child
-        buildLcmHealth(2 * node + 2, mid + 1, end);                                          // Build right child
+        int mid = (start + end) / 2; // Calculate the mid point
+        buildLcmHealth(2 * node + 1, start, mid); // Build left child
+        buildLcmHealth(2 * node + 2, mid + 1, end); // Build right child
         lcmHealthTree[node] = lcm(lcmHealthTree[2 * node + 1], lcmHealthTree[2 * node + 2]); // Combine results
     }
 
-    int queryGcdAttack(int node, int start, int end, int l, int r) // Function to query the GCD of attacks in a given range
+    int queryGcdAttack(int node, int start, int end, int l, int r)  // Function to query the GCD of attacks in a given range
     {
         if (start > r || end < l)
         {
@@ -285,13 +285,13 @@ private:
         {
             return gcdAttackTree[node]; // Fully in range
         }
-        int mid = (start + end) / 2;                                     // Calculate the mid point
-        int leftGcd = queryGcdAttack(2 * node + 1, start, mid, l, r);    // Query left child
-        int rightGcd = queryGcdAttack(2 * node + 2, mid + 1, end, l, r); // Query right child
-        return __gcd(leftGcd, rightGcd);                                 // Combine results
+        int mid = (start + end) / 2; // Calculate the mid point
+        int leftGcd = queryGcdAttack(2 * node + 1, start, mid, l, r); // Query left child
+        int rightGcd = queryGcdAttack(2 * node + 2, mid + 1, end, l, r);  // Query right child
+        return __gcd(leftGcd, rightGcd); // Combine results
     }
 
-    int queryGcdHealth(int node, int start, int end, int l, int r) // Function to query the GCD of healths in a given range
+    int queryGcdHealth(int node, int start, int end, int l, int r)  // Function to query the GCD of healths in a given range
     {
         if (start > r || end < l)
         {
@@ -301,13 +301,13 @@ private:
         {
             return gcdHealthTree[node]; // Fully in range
         }
-        int mid = (start + end) / 2;                                     // Calculate the mid point
-        int leftGcd = queryGcdHealth(2 * node + 1, start, mid, l, r);    // Query left child
+        int mid = (start + end) / 2; // Calculate the mid point
+        int leftGcd = queryGcdHealth(2 * node + 1, start, mid, l, r); // Query left child
         int rightGcd = queryGcdHealth(2 * node + 2, mid + 1, end, l, r); // Query right child
-        return __gcd(leftGcd, rightGcd);                                 // Combine results
+        return __gcd(leftGcd, rightGcd); // Combine results
     }
-
-    int queryLcmAttack(int node, int start, int end, int l, int r) // Function to query the LCM of attacks in a given range
+    
+    int queryLcmAttack(int node, int start, int end, int l, int r)  // Function to query the LCM of attacks in a given range
     {
         if (start > r || end < l)
         {
@@ -317,13 +317,13 @@ private:
         {
             return lcmAttackTree[node]; // Fully in range
         }
-        int mid = (start + end) / 2;                                     // Calculate the mid point
-        int leftLcm = queryLcmAttack(2 * node + 1, start, mid, l, r);    // Query left child
+        int mid = (start + end) / 2; // Calculate the mid point
+        int leftLcm = queryLcmAttack(2 * node + 1, start, mid, l, r); // Query left child
         int rightLcm = queryLcmAttack(2 * node + 2, mid + 1, end, l, r); // Query right child
-        return lcm(leftLcm, rightLcm);                                   // Combine results
+        return lcm(leftLcm, rightLcm); // Combine results
     }
-
-    int queryLcmHealth(int node, int start, int end, int l, int r) // Function to query the LCM of healths in a given range
+    
+    int queryLcmHealth(int node, int start, int end, int l, int r)  // Function to query the LCM of healths in a given range
     {
         if (start > r || end < l)
         {
@@ -333,14 +333,14 @@ private:
         {
             return lcmHealthTree[node]; // Fully in range
         }
-        int mid = (start + end) / 2;                                     // Calculate the mid point
-        int leftLcm = queryLcmHealth(2 * node + 1, start, mid, l, r);    // Query left child
+        int mid = (start + end) / 2; // Calculate the mid point
+        int leftLcm = queryLcmHealth(2 * node + 1, start, mid, l, r); // Query left child
         int rightLcm = queryLcmHealth(2 * node + 2, mid + 1, end, l, r); // Query right child
-        return lcm(leftLcm, rightLcm);                                   // Combine results
+        return lcm(leftLcm, rightLcm); // Combine results
     }
 
     // Update functions
-    void updateSumAttack(int idx, int start, int end, int pos, int value) // Function to update the sum of attacks at a specific position
+    void updateSumAttack(int idx, int start, int end, int pos, int value)  // Function to update the sum of attacks at a specific position
     {
         if (start == end) // If it's a leaf node
         {
@@ -349,7 +349,7 @@ private:
         else
         {
             int mid = (start + end) / 2; // Calculate the mid point
-            if (pos <= mid)              // If the position is in the left child
+            if (pos <= mid) // If the position is in the left child
             {
                 updateSumAttack(2 * idx + 1, start, mid, pos, value); // Update left child
             }
@@ -361,7 +361,7 @@ private:
         }
     }
 
-    void updateSumHealth(int idx, int start, int end, int pos, int value) // Function to update the sum of healths at a specific position
+    void updateSumHealth(int idx, int start, int end, int pos, int value)  // Function to update the sum of healths at a specific position
     {
         if (start == end) // If it's a leaf node
         {
@@ -370,7 +370,7 @@ private:
         else
         {
             int mid = (start + end) / 2; // Calculate the mid point
-            if (pos <= mid)              // If the position is in the left child
+            if (pos <= mid) // If the position is in the left child
             {
                 updateSumHealth(2 * idx + 1, start, mid, pos, value); // Update left child
             }
@@ -382,7 +382,7 @@ private:
         }
     }
 
-    void updateMaxAttackIndex(int index, int value, vector<pair<int, int>> &a, int start, int end, int node) // Function to update the attack value at a specific index and adjust the maximum attack index
+    void updateMaxAttackIndex(int index, int value, vector<pair<int, int>> &a, int start, int end, int node)  // Function to update the attack value at a specific index and adjust the maximum attack index
     {
         if (start == end)
         {
@@ -519,11 +519,11 @@ private:
         }
     }
 
-    void updateGCDHealth(int idx, int start, int end, int pos, int value) // Function to update the health value at a specific index and adjust the GCD health
+    void updateGCDHealth(int idx, int start, int end, int pos, int value)  // Function to update the health value at a specific index and adjust the GCD health
     {
         if (start == end)
         {
-            gcdHealthTree[idx] = value; // Leaf node
+            gcdHealthTree[idx] = value;  // Leaf node
         }
         else
         {
@@ -561,7 +561,7 @@ private:
         }
     }
 
-    void updateGCDAttack(int idx, int start, int end, int pos, int value) // Function to update the attack value at a specific index and adjust the GCD attack
+    void updateGCDAttack(int idx, int start, int end, int pos, int value)  // Function to update the attack value at a specific index and adjust the GCD attack
     {
         if (start == end)
         {
@@ -582,7 +582,7 @@ private:
         }
     }
 
-    void updateLCMAttack(int idx, int start, int end, int pos, int value) // Function to update the attack value at a specific index and adjust the LCM attack
+    void updateLCMAttack(int idx, int start, int end, int pos, int value)  // Function to update the attack value at a specific index and adjust the LCM attack
     {
         if (start == end)
         {
@@ -608,24 +608,24 @@ public:
     {
         int n = values.size(); // Get the size of the array
         // Resize trees for different operations
-        sumAttackTree.resize(4 * n);      // Resize the sum attack tree
-        sumHealthTree.resize(4 * n);      // Resize the sum health tree
-        maxAttackTreeIndex.resize(4 * n); // Resize the max attack tree
-        maxHealthTreeIndex.resize(4 * n); // Resize the max health tree
-        minAttackTreeIndex.resize(4 * n); // Resize the min attack tree
-        minHealthTreeIndex.resize(4 * n); // Resize the min health tree
-        gcdAttackTree.resize(4 * n);      // Resize the GCD attack tree
-        gcdHealthTree.resize(4 * n);      // Resize the GCD health tree
-        lcmAttackTree.resize(4 * n);      // Resize the LCM attack tree
-        lcmHealthTree.resize(4 * n);      // Resize the LCM health tree
+        sumAttackTree.resize(4 * n);  // Resize the sum attack tree
+        sumHealthTree.resize(4 * n);  // Resize the sum health tree
+        maxAttackTreeIndex.resize(4 * n);  // Resize the max attack tree
+        maxHealthTreeIndex.resize(4 * n);  // Resize the max health tree
+        minAttackTreeIndex.resize(4 * n);  // Resize the min attack tree
+        minHealthTreeIndex.resize(4 * n);  // Resize the min health tree
+        gcdAttackTree.resize(4 * n);  // Resize the GCD attack tree
+        gcdHealthTree.resize(4 * n);  // Resize the GCD health tree
+        lcmAttackTree.resize(4 * n);  // Resize the LCM attack tree
+        lcmHealthTree.resize(4 * n);  // Resize the LCM health tree
 
         // Build the segment trees
-        buildSumAttack(1, 0, n - 1); // Build the sum attack tree
-        buildSumHealth(1, 0, n - 1); // Build the sum health tree
-        buildMaxAttack(1, 0, n - 1); // Build the max attack tree
-        buildMaxHealth(1, 0, n - 1); // Build the max health tree
-        buildMinAttack(1, 0, n - 1); // Build the min attack tree
-        buildMinHealth(1, 0, n - 1); // Build the min health tree
+        buildSumAttack(1, 0, n - 1);  // Build the sum attack tree
+        buildSumHealth(1, 0, n - 1);  // Build the sum health tree
+        buildMaxAttack(1, 0, n - 1);  // Build the max attack tree 
+        buildMaxHealth(1, 0, n - 1);  // Build the max health tree
+        buildMinAttack(1, 0, n - 1);  // Build the min attack tree
+        buildMinHealth(1, 0, n - 1);  // Build the min health tree
         buildGcdAttack(1, 0, n - 1); // Assuming you have this
         buildGcdHealth(1, 0, n - 1); // Assuming you have this
         buildLcmAttack(1, 0, n - 1); // Assuming you have this
@@ -638,27 +638,27 @@ public:
         return querySumAttack(1, 0, a.size() - 1, l, r); // Call the helper function
     }
 
-    long long querySumHealth(int l, int r) // Function to query the sum of healths in a given range
+    long long querySumHealth(int l, int r)  // Function to query the sum of healths in a given range
     {
-        return querySumHealth(1, 0, a.size() - 1, l, r); // Call the helper function
+        return querySumHealth(1, 0, a.size() - 1, l, r);  // Call the helper function
     }
 
-    int queryMaxAttackIndex(int l, int r) // Function to query the index of max attack in a given range
+    int queryMaxAttackIndex(int l, int r)  // Function to query the index of max attack in a given range
     {
-        return queryMaxAttackIndex(1, 0, a.size() - 1, l, r); // Call the helper function
+        return queryMaxAttackIndex(1, 0, a.size() - 1, l, r);  // Call the helper function
     }
 
-    int queryMaxHealthIndex(int l, int r) // Function to query the index of max health in a given range
+    int queryMaxHealthIndex(int l, int r)  // Function to query the index of max health in a given range
     {
-        return queryMaxHealthIndex(1, 0, a.size() - 1, l, r); // Call the helper function
+        return queryMaxHealthIndex(1, 0, a.size() - 1, l, r);  // Call the helper function
     }
 
-    int queryMinAttackIndex(int l, int r) // Function to query the index of min attack in a given range
+    int queryMinAttackIndex(int l, int r)  // Function to query the index of min attack in a given range
     {
-        return queryMinAttackIndex(1, 0, a.size() - 1, l, r); // Call the helper function
+        return queryMinAttackIndex(1, 0, a.size() - 1, l, r);  // Call the helper function
     }
 
-    int queryMinHealthIndex(int l, int r) // Function to query the index of min health in a given range
+    int queryMinHealthIndex(int l, int r)  // Function to query the index of min health in a given range
     {
         return queryMinHealthIndex(1, 0, a.size() - 1, l, r); // Call the helper function
     }
@@ -686,45 +686,47 @@ public:
     // Update function
     void update(int pos, int attack, int health) // Function to update the values at a specific position
     {
-        a[pos] = {attack, health};                                // Update the values in the array
-        updateSumAttack(1, 0, a.size() - 1, pos, attack);         // Ensure the correct tree is updated
+        a[pos] = {attack, health};                        // Update the values in the array
+        updateSumAttack(1, 0, a.size() - 1, pos, attack); // Ensure the correct tree is updated
         updateMaxAttackIndex(pos, attack, a, 0, a.size() - 1, 0); // Update the maximum trees
         updateMaxHealthIndex(pos, health, a, 0, a.size() - 1, 0); // Update the maximum trees
 
         // Update the minimum trees
         updateMinAttackIndex(pos, attack, a, 0, a.size() - 1, 0); // Update the minimum trees
         updateMinHealthIndex(pos, health, a, 0, a.size() - 1, 0); // Update the minimum trees
-        updateGCDHealth(1, 0, a.size() - 1, pos, health);         // Update the GCD health tree
-        updateLCMHealth(1, 0, a.size() - 1, pos, health);         // Update the LCM health tree
-        updateGCDAttack(1, 0, a.size() - 1, pos, attack);         // Update the GCD attack tree
-        updateLCMAttack(1, 0, a.size() - 1, pos, attack);         // Update the LCM attack tree
+        updateGCDHealth(1, 0, a.size() - 1, pos, health); // Update the GCD health tree
+        updateLCMHealth(1, 0, a.size() - 1, pos, health); // Update the LCM health tree
+        updateGCDAttack(1, 0, a.size() - 1, pos, attack); // Update the GCD attack tree
+        updateLCMAttack(1, 0, a.size() - 1, pos, attack); // Update the LCM attack tree
     }
 };
+/*
+
 int main() // Main function to test the segment tree
 {
-    const int numSoldiers = 100000;            // Number of soldiers in each team
+    const int numSoldiers = 100000; // Number of soldiers in each team
     vector<pair<int, int>> team1(numSoldiers); // Vector to store the soldiers of team 1
     vector<pair<int, int>> team2(numSoldiers); // Vector to store the soldiers of team 2
 
     ifstream infile1("team1.txt"); // Read from team1.txt
-    if (!infile1.is_open())        // Check if the file is open
+    if (!infile1.is_open()) // Check if the file is open
     {
         cerr << "Error opening team1.txt!" << endl; // Print an error message
-        return 1;                                   // Return an error code
+        return 1; // Return an error code
     }
 
     ifstream infile2("team2.txt"); // Read from team2.txt
-    if (!infile2.is_open())        // Check if the file is open
+    if (!infile2.is_open()) // Check if the file is open
     {
         cerr << "Error opening team2.txt!" << endl; // Print an error message
-        return 1;                                   // Return an error code
+        return 1; // Return an error code
     }
 
     // Read from team1.txt for Team 1
     for (int i = 0; i < numSoldiers; i++) // Loop through the soldiers
     {
-        int attack, health;                   // Variables to store the attack and health
-        infile1 >> attack >> health;          // Read the values from the file
+        int attack, health; // Variables to store the attack and health
+        infile1 >> attack >> health; // Read the values from the file
         team1[i] = make_pair(attack, health); // Store the values in the vector
     }
     infile1.close(); // Close the file
@@ -732,102 +734,336 @@ int main() // Main function to test the segment tree
     // Read from team2.txt for Team 2
     for (int i = 0; i < numSoldiers; i++) // Loop through the soldiers
     {
-        int attack, health;                   // Variables to store the attack and health
-        infile2 >> attack >> health;          // Read the values from the file
+        int attack, health; // Variables to store the attack and health
+        infile2 >> attack >> health; // Read the values from the file
         team2[i] = make_pair(attack, health); // Store the values in the vector
     }
     infile2.close(); // Close the file
 
-    SegmentTree segtree1(team1);                                                                                                                   // Create a segment tree for team 1
-    SegmentTree segtree2(team2);                                                                                                                   // Create a segment tree for team 2
-    int n1 = 100;                                                                                                                                  // Number of rounds for team 1
-    int teamAscore = 0;                                                                                                                            // Score for team 1
-    int idx1 = 0;                                                                                                                                  // Index for team 1
-    cout << "There are 100000 soldiers on each team" << endl;                                                                                      // Print the number of soldiers
+    SegmentTree segtree1(team1); // Create a segment tree for team 1
+    SegmentTree segtree2(team2); // Create a segment tree for team 2
+    int n1 = 100;  // Number of rounds for team 1
+    int teamAscore = 0; // Score for team 1
+    int idx1 = 0; // Index for team 1
+    cout << "There are 100000 soldiers on each team" << endl; // Print the number of soldiers
     cout << "Every time we will send a range of indexes of size 100 to attack and there will be 100 soldiers to defend on the other side" << endl; // Print the rules
-    cout << "Score points are given based on sum of attack and sum of health of both teams" << endl;                                               // Print the rules
-    cout << "First 100 rounds are held for team A and 100 rounds are held for team B" << endl;                                                     // Print the rules
-    cout << "After every attack, we will increase the attack of soldiers to 100 linearly for both teams" << endl;                                  // Print the rules
-    cout << "We will have LCM round and GCD round as surprise rounds based on LCM and GCD of two teams we will give them points" << endl;          // Print the rules
+    cout << "Score points are given based on sum of attack and sum of health of both teams" << endl; // Print the rules
+    cout << "First 100 rounds are held for team A and 100 rounds are held for team B" << endl; // Print the rules
+    cout << "After every attack, we will increase the attack of soldiers to 100 linearly for both teams" << endl; // Print the rules
+    cout << "We will have LCM round and GCD round as surprise rounds based on LCM and GCD of two teams we will give them points" << endl; // Print the rules
 
     while (n1--) // Loop through the rounds for team 1
     {
         int l1, r1; // Variables to store the range of indexes
-        cout << "Please enter the starting index and end index of team1 of size 100" << endl;
-        cin >> l1 >> r1;                                                                           // Read the range of indexes
-        cout << "Sum of attack points of the soldier " << segtree1.querySumAttack(l1, r1) << endl; // Query the sum of attacks
-        int a1 = segtree1.querySumAttack(l1, r1);                                                  // Store the sum of attacks
-        segtree1.update(idx1, 100, 0);                                                             // Update attack of team1 at idx1
+        cin >> l1 >> r1; // Read the range of indexes
+        cout << segtree1.querySumAttack(l1, r1) << endl; // Query the sum of attacks
+        int a1 = segtree1.querySumAttack(l1, r1); // Store the sum of attacks
+        segtree1.update(idx1, 100, 0); // Update attack of team1 at idx1
 
         int l2, r2; // Variables to store the range of indexes
-
-        cout << "Please enter the starting index and end index of team2 of size 100 to attack " << endl;
-        cin >> l2 >> r2;                                                                           // Read the range of indexes
-        cout << "Sum of health points of the soldier " << segtree2.querySumHealth(l1, r1) << endl; // Query the sum of healths
-        int a2 = segtree2.querySumHealth(l1, r1);                                                  // Store the sum of healths
-        teamAscore += (a1 - a2);                                                                   // Update the score for team 1
-        idx1 += 100;                                                                               // Increase the index by 100
+        cin >> l2 >> r2; // Read the range of indexes
+        cout << segtree2.querySumHealth(l1, r1) << endl; // Query the sum of healths
+        int a2 = segtree2.querySumHealth(l1, r1); // Store the sum of healths
+        teamAscore += (a1 - a2); // Update the score for team 1
+        idx1 += 100; // Increase the index by 100
 
         if (n1 % 10 == 0) // Surprise round
         {
             int l1, r1, l2, r2; // Variables to store the range of indexes
-            cout << "Please enter all the starting and end indexes of both the teams for lcm round" << endl;
-            cin >> l1 >> r1 >> l2 >> r2;              // Read the range of indexes
+            cin >> l1 >> r1 >> l2 >> r2; // Read the range of indexes
             int a1 = segtree1.queryLcmAttack(l1, r1); // Query the LCM of attacks
             int a2 = segtree2.queryLcmHealth(l2, r2); // Query the LCM of healths
-            if (a1 > a2)                              // Compare the LCM values
+            if (a1 > a2) // Compare the LCM values
             {
                 teamAscore += 50; // Update the score for team 1
             }
         }
-        cout << "TeamA-score after round: " << teamAscore << endl; // Print the score for team 1
+        cout << "teamAscore after round: " << teamAscore << endl; // Print the score for team 1
     }
-
-    int n2 = 100;       // Number of rounds for team 2
-    int teamBscore = 0; // Score for team 2
-    while (n2--)        // Loop through the rounds for team 2
+ 
+    int n2 = 100; // Number of rounds for team 2
+    int teamBscore = 0;     // Score for team 2
+    while (n2--) // Loop through the rounds for team 2
     {
         int l1, r1; // Variables to store the range of indexes
-        cout << "Please enter the starting index and end index of team2 of size 100" << endl;
-        cin >> l1 >> r1;                                                                             // Read the range of indexes// Query the sum of attacks
-        cout << " Sum of attack points of the soldiers " << segtree2.querySumAttack(l1, r1) << endl; // Query the sum of attacks
-        int a1 = segtree2.querySumAttack(l1, r1);                                                    // Store the sum of attacks
-        segtree2.update(n2, 0, 0);                                                                   // Assuming updates are needed for team2
+        cin >> l1 >> r1;    // Read the range of indexes
+        cout << segtree2.querySumAttack(l1, r1) << endl; // Query the sum of attacks
+        int a1 = segtree2.querySumAttack(l1, r1); // Store the sum of attacks
+        segtree2.update(n2, 0, 0); // Assuming updates are needed for team2
 
         int l2, r2; // Variables to store the range of indexes
-        cout << "Please enter the starting index and end index of team1 of size 100 to attack " << endl;
-        cin >> l2 >> r2;                                                                           // Read the range of indexes
-        cout << "Sum of health points of the soldiers" << segtree1.querySumHealth(l1, r1) << endl; // Query the sum of healths
-        int a2 = segtree1.querySumHealth(l1, r1);                                                  // Store the sum of healths
-        teamBscore += (a1 - a2);                                                                   // Update the score for team 2
+        cin >> l2 >> r2; // Read the range of indexes
+        cout << segtree1.querySumHealth(l1, r1) << endl; // Query the sum of healths
+        int a2 = segtree1.querySumHealth(l1, r1); // Store the sum of healths
+        teamBscore += (a1 - a2); // Update the score for team 2
 
         if (n2 % 11 == 0) // Surprise round
         {
             int l1, r1, l2, r2; // Variables to store the range of indexes
-            cout << "Please enter all the starting and end indexes of both the teams for gcd round" << endl;
-            cin >> l1 >> r1 >> l2 >> r2;              // Read the range of indexes
+            cin >> l1 >> r1 >> l2 >> r2; // Read the range of indexes
             int a1 = segtree1.queryGcdAttack(l1, r1); // Query the GCD of attacks
             int a2 = segtree2.queryGcdHealth(l2, r2); // Query the GCD of healths
-            if (a2 > a1)                              // Compare the GCD values
+            if (a2 > a1) // Compare the GCD values
             {
                 teamBscore += 50; // Update the score for team 2
             }
         }
-        cout << "TeamB-score after round: " << teamBscore << endl; // Print the score for team 2
+        cout << "teamBscore after round: " << teamBscore << endl ; // Print the score for team 2
     }
 
     if (teamAscore > teamBscore) // Compare the scores
     {
-        cout << "Team A won the game" << endl; // Print the winner
+        cout << "team A won the game" << endl; // Print the winner
     }
     else if (teamAscore == teamBscore) // Compare the scores
     {
-        cout << "Match tied" << endl; // Print the result
+        cout << "match tied" << endl; // Print the result
     }
     else // Compare the scores
     {
-        cout << "Team B won the game" << endl; // Print the winner
+        cout << "team B won the game" << endl; // Print the winner
     }
 
     return 0; // Return 0 to indicate success
+}
+*/
+
+int main()
+{
+    const int numSoldiers = 100000;
+    vector<pair<int, int>> team1(numSoldiers);
+    vector<pair<int, int>> team2(numSoldiers);
+
+    ifstream infile1("team1.txt");
+    if (!infile1.is_open())
+    {
+        cerr << "Error opening team1.txt!" << endl;
+        return 1;
+    }
+
+    ifstream infile2("team2.txt");
+    if (!infile2.is_open())
+    {
+        cerr << "Error opening team2.txt!" << endl;
+        return 1;
+    }
+
+    for (int i = 0; i < numSoldiers; i++)
+    {
+        int attack, health;
+        infile1 >> attack >> health;
+        team1[i] = make_pair(attack, health);
+    }
+    infile1.close();
+
+    for (int i = 0; i < numSoldiers; i++)
+    {
+        int attack, health;
+        infile2 >> attack >> health;
+        team2[i] = make_pair(attack, health);
+    }
+    infile2.close();
+
+    SegmentTree segtree1(team1);
+    SegmentTree segtree2(team2);
+
+    cout << "==================================================" << endl;
+    cout << "         WELCOME TO THE BATTLE GAME!             " << endl;
+    cout << "==================================================" << endl;
+    cout << endl;
+    cout << "GAME RULES:" << endl;
+    cout << "  -> Each team has 100,000 soldiers"                << endl;
+    cout << "  -> You choose number of rounds"                   << endl;
+    cout << "  -> Soldiers per round = 100000 / rounds"         << endl;
+    cout << "  -> Score = Team Attack Sum - Enemy Health Sum"    << endl;
+    cout << "  -> Every 10th round = LCM Surprise (+50 bonus)"  << endl;
+    cout << "  -> Every 11th round = GCD Surprise (+50 bonus)"  << endl;
+    cout << "==================================================" << endl;
+    cout << endl;
+
+    int rounds;
+    cout << "Enter number of rounds (e.g. 10, 20, 50, 100): ";
+    cin >> rounds;
+
+    if (100000 % rounds != 0)
+    {
+        cout << "ERROR: 100000 must be divisible by number of rounds!" << endl;
+        cout << "Valid values: 1, 2, 4, 5, 8, 10, 20, 25, 40, 50, 100, 125, 200, 250, 400, 500, 1000 ..." << endl;
+        return 1;
+    }
+
+    int soldiersPerRound = 100000 / rounds;
+
+    cout << endl;
+    cout << "  Total Soldiers  : 100000"                          << endl;
+    cout << "  Total Rounds    : " << rounds                      << endl;
+    cout << "  Soldiers/Round  : " << soldiersPerRound            << endl;
+    cout << "==================================================" << endl;
+
+    // -----------------------------------------------
+    //               TEAM A ROUNDS
+    // -----------------------------------------------
+    int teamAscore = 0;
+
+    cout << endl;
+    cout << "**************************************************" << endl;
+    cout << "             TEAM A TURN - " << rounds << " ROUNDS" << endl;
+    cout << "**************************************************" << endl;
+
+    for (int round = 1; round <= rounds; round++)
+    {
+        int l = (round - 1) * soldiersPerRound;       // left index
+        int r = round * soldiersPerRound - 1;          // right index
+
+        long long attackSum = segtree1.querySumAttack(l, r);   // Team A attacks
+        long long healthSum = segtree2.querySumHealth(l, r);   // Team B defends
+
+        int roundScore = attackSum - healthSum;
+        teamAscore += roundScore;
+
+        // boost soldiers in this round range to attack = 100
+        for (int i = l; i <= r; i++)
+        {
+            segtree1.update(i, 100, team1[i].second);
+            team1[i].first = 100;
+        }
+
+        cout << endl;
+        cout << "--------------------------------------------------" << endl;
+        cout << "  TEAM A  -  ROUND " << round                       << endl;
+        cout << "--------------------------------------------------" << endl;
+        cout << "  Soldiers Range : index " << l << " to " << r      << endl;
+        cout << "  Team A Attack  : " << attackSum                    << endl;
+        cout << "  Team B Health  : " << healthSum                    << endl;
+        cout << "  Round Score    : " << roundScore                   << endl;
+
+        if (roundScore > 0)
+            cout << "  >>> Team A WINS this round! (+" << roundScore << ")" << endl;
+        else if (roundScore == 0)
+            cout << "  >>> This round is a TIE!"                            << endl;
+        else
+            cout << "  >>> Team A LOSES this round! (" << roundScore << ")" << endl;
+
+        // LCM surprise round every 10th round
+        if (round % 10 == 0)
+        {
+            cout << endl;
+            cout << "  *** SURPRISE LCM ROUND! ***"                              << endl;
+            long long lcm1 = segtree1.queryLcmAttack(l, r);
+            long long lcm2 = segtree2.queryLcmHealth(l, r);
+            cout << "  Team A LCM of Attacks (index " << l << " to " << r << ") = " << lcm1 << endl;
+            cout << "  Team B LCM of Health  (index " << l << " to " << r << ") = " << lcm2 << endl;
+            if (lcm1 > lcm2)
+            {
+                teamAscore += 50;
+                cout << "  >>> Team A wins LCM round! +50 bonus! " << endl;
+            }
+            else
+            {
+                cout << "  >>> Team A loses LCM round. No bonus."  << endl;
+            }
+        }
+
+        cout << "  Team A Total Score so far: " << teamAscore << endl;
+    }
+
+    // -----------------------------------------------
+    //               TEAM B ROUNDS
+    // -----------------------------------------------
+    int teamBscore = 0;
+
+    cout << endl;
+    cout << "**************************************************" << endl;
+    cout << "             TEAM B TURN - " << rounds << " ROUNDS" << endl;
+    cout << "**************************************************" << endl;
+
+    for (int round = 1; round <= rounds; round++)
+    {
+        int l = (round - 1) * soldiersPerRound;       // left index
+        int r = round * soldiersPerRound - 1;          // right index
+
+        long long attackSum = segtree2.querySumAttack(l, r);   // Team B attacks
+        long long healthSum = segtree1.querySumHealth(l, r);   // Team A defends
+
+        int roundScore = attackSum - healthSum;
+        teamBscore += roundScore;
+
+        // boost soldiers in this round range to attack = 100
+        for (int i = l; i <= r; i++)
+        {
+            segtree2.update(i, 100, team2[i].second);
+            team2[i].first = 100;
+        }
+
+        cout << endl;
+        cout << "--------------------------------------------------" << endl;
+        cout << "  TEAM B  -  ROUND " << round                       << endl;
+        cout << "--------------------------------------------------" << endl;
+        cout << "  Soldiers Range : index " << l << " to " << r      << endl;
+        cout << "  Team B Attack  : " << attackSum                    << endl;
+        cout << "  Team A Health  : " << healthSum                    << endl;
+        cout << "  Round Score    : " << roundScore                   << endl;
+
+        if (roundScore > 0)
+            cout << "  >>> Team B WINS this round! (+" << roundScore << ")" << endl;
+        else if (roundScore == 0)
+            cout << "  >>> This round is a TIE!"                            << endl;
+        else
+            cout << "  >>> Team B LOSES this round! (" << roundScore << ")" << endl;
+
+        // GCD surprise round every 11th round
+        if (round % 11 == 0)
+        {
+            cout << endl;
+            cout << "  *** SURPRISE GCD ROUND! ***"                              << endl;
+            long long gcd1 = segtree1.queryGcdAttack(l, r);
+            long long gcd2 = segtree2.queryGcdHealth(l, r);
+            cout << "  Team A GCD of Attacks (index " << l << " to " << r << ") = " << gcd1 << endl;
+            cout << "  Team B GCD of Health  (index " << l << " to " << r << ") = " << gcd2 << endl;
+            if (gcd2 > gcd1)
+            {
+                teamBscore += 50;
+                cout << "  >>> Team B wins GCD round! +50 bonus!"  << endl;
+            }
+            else
+            {
+                cout << "  >>> Team B loses GCD round. No bonus."  << endl;
+            }
+        }
+
+        cout << "  Team B Total Score so far: " << teamBscore << endl;
+    }
+
+    // -----------------------------------------------
+    //               FINAL RESULT
+    // -----------------------------------------------
+    cout << endl;
+    cout << "==================================================" << endl;
+    cout << "                FINAL RESULTS                     " << endl;
+    cout << "==================================================" << endl;
+    cout << "  Total Rounds    : " << rounds                     << endl;
+    cout << "  Soldiers/Round  : " << soldiersPerRound           << endl;
+    cout << "--------------------------------------------------"  << endl;
+    cout << "  Team A Final Score : " << teamAscore              << endl;
+    cout << "  Team B Final Score : " << teamBscore              << endl;
+    cout << "--------------------------------------------------"  << endl;
+
+    if (teamAscore > teamBscore)
+    {
+        cout << "  >>> TEAM A WON THE GAME! CONGRATULATIONS!"    << endl;
+        cout << "  >>> Winning margin: " << (teamAscore - teamBscore) << endl;
+    }
+    else if (teamAscore == teamBscore)
+    {
+        cout << "  >>> THE MATCH IS TIED! WELL PLAYED BOTH!"     << endl;
+    }
+    else
+    {
+        cout << "  >>> TEAM B WON THE GAME! CONGRATULATIONS!"    << endl;
+        cout << "  >>> Winning margin: " << (teamBscore - teamAscore) << endl;
+    }
+
+    cout << "==================================================" << endl;
+
+    return 0;
 }
